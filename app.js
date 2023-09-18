@@ -21,7 +21,7 @@ httpServer.listen(process.env.PORT, async () => {
 })
 const io = new Server(httpServer, {
     cors: {
-        origin: ['http://localhost:3000'],
+        origin: ['http://localhost:3000','https://doxy-frontend.vercel.app'],
         methods: ['GET', 'POST']
     }
 })
