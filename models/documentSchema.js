@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 const documentSchema = new Schema({
 
@@ -10,6 +10,14 @@ const documentSchema = new Schema({
         type: Object,
         required: true,
         default: {},
+    },
+
+    createdBy: {
+        type: mongoose.Types.ObjectId, ref: 'User'
+    },
+    public: {
+        type: Boolean,
+        default: false,
     }
 
 }, { timestamps: true })
