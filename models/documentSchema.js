@@ -6,7 +6,7 @@ const documentSchema = new Schema({
         type: String,
         required: true
     },
-    title: { type: String, default: "Untitled Document" },
+    title: { type: String, default: "Untitled Document", trim: true },
     data: {
         type: Object,
         required: true,
