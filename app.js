@@ -12,7 +12,6 @@ import credentials from './middlewares/credentials.js';
 import authRoutes from './routes/auth.routes.js'
 import indexRoutes from "./index.js"
 import tokenValidator from "./middlewares/verifyToken.js"
-import mongoose from 'mongoose';
 dotenv.config()
 
 
