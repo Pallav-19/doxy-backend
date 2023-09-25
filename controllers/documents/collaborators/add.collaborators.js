@@ -4,8 +4,8 @@ export const addCollaborators = async (req, res) => {
         const result = await Document.findByIdAndUpdate(req.params.id, {
 
             $addToSet: {
-                viewers: { $each: JSON.parse(req.body.collaborators) },
-                collaborators: { $each: JSON.parse(req.body.collaborators) },
+                viewers: { $each: (req.body.collaborators) },
+                collaborators: { $each: (req.body.collaborators) },
             }
         }, { new: true })
             .select('collaborators')
@@ -13,6 +13,7 @@ export const addCollaborators = async (req, res) => {
         res.status(200).json({ message: "Collaborators Added!", result })
 
     } catch (error) {
+        console.log(error.message);
         res.status(500).json({ message: "Internal Error Occured!" })
 
     }

@@ -12,6 +12,7 @@ import credentials from './middlewares/credentials.js';
 import authRoutes from './routes/auth.routes.js'
 import indexRoutes from "./index.js"
 import tokenValidator from "./middlewares/verifyToken.js"
+import mongoose from 'mongoose';
 dotenv.config()
 
 
@@ -46,12 +47,35 @@ const io = new Server(httpServer, {
 io.on('connection', socket => {
     console.log("connected");
     socket.on('get-document', async ({ id, userId }) => {
-        const { data, viewers, collaborators, isPublic, publiclyEditable, createdBy, title } = await getDocument(id, userId)
-        console.log({ data, viewers, collaborators, isPublic, publiclyEditable, createdBy });
-        const canView = viewers?.includes(userId) || isPublic || createdBy == userId
+        const {
+            data,
+            viewers,
+            collaborators,
+            isPublic,
+            publiclyEditable,
+            createdBy,
+            title
+        } = await getDocument(id, userId)
+        const canView = viewers?.includes(userId)
+            || isPublic
+            || createdBy == userId
         socket.join(id)
-        const canEdit = collaborators.includes(userId) || publiclyEditable || createdBy == userId
-        canView ? socket.emit('load-document', { data, title, isPublic, publiclyEditable, }) : socket.emit("access-denied", { message: "You are not authorized to view the document you are trying to access!" });
+        const canEdit = collaborators.includes(userId)
+            || publiclyEditable
+            || createdBy == userId
+        canView ?
+            socket.emit('load-document', {
+                data,
+                title,
+                isPublic,
+                publiclyEditable,
+            })
+            :
+            socket.emit("access-denied",
+                {
+                    message:
+                        "You are not authorized to view the document you are trying to access!"
+                });
         socket.emit('can-edit', canEdit)
         socket.on("change-content", contents => {
             socket.broadcast.to(id).emit('receive-changes', contents)

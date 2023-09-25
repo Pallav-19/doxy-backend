@@ -8,7 +8,7 @@ export const connectDb = async () => {
             await mongoose.connect(process.env.MONGODB_URL, { useUnifiedTopology: true, useNewUrlParser: true })
             resolve("Connected to atlas!")
         } catch (error) {
-            reject(err?.message)
+            reject(error?.message)
         }
     })
 }

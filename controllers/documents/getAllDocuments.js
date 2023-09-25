@@ -8,7 +8,7 @@ export const getAllDocuments = async (req, res) => {
                 { viewers: { $elemMatch: { $eq: req.user.userId } } },
             ]
         }).populate([{ path: 'createdBy', select: "username" },
-        { path: 'lastUpdatedBy', select: "username" }])
+        { path: 'lastUpdatedBy', select: "username" }]).sort({ updatedAt: -1 });
         res.status(200).json({ message: "Documents Fetched!", result })
     } catch (error) {
         console.log(error.message);
