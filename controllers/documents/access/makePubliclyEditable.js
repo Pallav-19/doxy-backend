@@ -1,4 +1,4 @@
-import Document from "../../models/documentSchema.js"
+import Document from "../../../models/documentSchema.js"
 
 export const makePubliclyEditable = async (req, res) => {
     try {

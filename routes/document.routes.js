@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { renameDocument } from "../controllers/documents/rename.document.js";
-import { makePublic } from "../controllers/documents/makePublic.js";
-import { makePubliclyEditable } from "../controllers/documents/makePubliclyEditable.js";
+import { makePublic } from "../controllers/documents/access/makePublic.js";
+import { makePubliclyEditable } from "../controllers/documents/access/makePubliclyEditable.js";
 import { getAllDocuments } from "../controllers/documents/getAllDocuments.js";
 import { getCollaborators } from "../controllers/documents/collaborators/get.collaborators.js";
 import { getCollaboratorsOptions } from "../controllers/documents/collaborators/get.collaboratorOptions.js"

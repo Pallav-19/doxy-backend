@@ -1,4 +1,4 @@
-import Document from "../../models/documentSchema.js"
+import Document from "../../../models/documentSchema.js"
 
 export const makePublic = async (req, res) => {
     try {
