@@ -6,6 +6,7 @@ const documentSchema = new Schema({
         type: String,
         required: true
     },
+    title: { type: String, default: "Untitled Document" },
     data: {
         type: Object,
         required: true,
@@ -15,11 +16,27 @@ const documentSchema = new Schema({
     createdBy: {
         type: mongoose.Types.ObjectId, ref: 'User'
     },
-    public: {
+    isPublic: {
         type: Boolean,
         default: false,
+    },
+    publiclyEditable: {
+        type: Boolean,
+        default: false,
+    },
+    viewers: {
+        type: [mongoose.Types.ObjectId],
+        ref: 'User',
+    },
+    collaborators: {
+        type: [mongoose.Types.ObjectId],
+        ref: 'User',
+    },
+    lastUpdatedBy: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User'
     }
 
 }, { timestamps: true })
 
-export const Document = model('document', documentSchema)
+export default model('document', documentSchema)

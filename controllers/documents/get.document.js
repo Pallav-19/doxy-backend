@@ -1,13 +1,12 @@
-import { Document } from "../../models/documentSchema.js";
+import Document from "../../models/documentSchema.js";
 
-export const getDocument = async (id) => {
+export const getDocument = async (id, userId) => {
     if (!id) return;
     try {
         const document = await Document.findById(id);
-        if (document)
-            if (document) return document;
+        if (document) return document;
 
-        return await Document.create({ _id: id, data: "" })
+        return await Document.create({ _id: id, data: "", createdBy: userId })
     } catch (error) {
         console.log(error.message);
     }

@@ -10,6 +10,8 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser';
 import credentials from './middlewares/credentials.js';
 import authRoutes from './routes/auth.routes.js'
+import indexRoutes from "./index.js"
+import tokenValidator from "./middlewares/verifyToken.js"
 dotenv.config()
 
 
@@ -20,6 +22,7 @@ app.use(express.json({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use("/auth", authRoutes)
+app.use("/api", tokenValidator, indexRoutes)
 const httpServer = http.createServer(app)
 httpServer.listen(process.env.PORT, async () => {
     try {
@@ -36,19 +39,26 @@ const io = new Server(httpServer, {
         methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT']
     }
 })
+
+
+//socket logic
+
 io.on('connection', socket => {
     console.log("connected");
-    socket.on('get-document', async id => {
-        const { data } = await getDocument(id)
+    socket.on('get-document', async ({ id, userId }) => {
+        const { data, viewers, collaborators, isPublic, publiclyEditable, createdBy, title } = await getDocument(id, userId)
+        console.log({ data, viewers, collaborators, isPublic, publiclyEditable, createdBy });
+        const canView = viewers?.includes(userId) || isPublic || createdBy == userId
         socket.join(id)
-        socket.emit('load-document', data);
-
+        const canEdit = collaborators.includes(userId) || publiclyEditable || createdBy == userId
+        canView ? socket.emit('load-document', { data, title, isPublic, publiclyEditable, }) : socket.emit("access-denied", { message: "You are not authorized to view the document you are trying to access!" });
+        socket.emit('can-edit', canEdit)
         socket.on("change-content", contents => {
             socket.broadcast.to(id).emit('receive-changes', contents)
         })
         socket.on('save-document', async value => {
-            await updateDocument(id, value)
-
+            const { data } = await updateDocument(id, value, userId)
+            data ? socket.emit('saved') : socket.emit('not-saved')
         })
     })
 })
