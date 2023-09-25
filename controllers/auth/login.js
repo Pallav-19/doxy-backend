@@ -7,8 +7,10 @@ export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        const user = await User.findOne({ username }).select('username _id password')
-
+        const user = await User.findOne({ username }).select('username _id password refreshToken')
+        if (user.refreshToken) {
+            return res.status(400).json({ message: "You are logged in somewhere else!" })
+        }
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
