@@ -12,6 +12,7 @@ import credentials from './middlewares/credentials.js';
 import authRoutes from './routes/auth.routes.js'
 import indexRoutes from "./index.js"
 import tokenValidator from "./middlewares/verifyToken.js"
+import { handleError } from './controllers/documents/utils/errorHandler.js';
 dotenv.config()
 
 
@@ -23,23 +24,22 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use("/auth", authRoutes)
 app.use("/api", tokenValidator, indexRoutes)
+app.use(handleError)
 const httpServer = http.createServer(app)
-httpServer.listen(process.env.PORT, async () => {
-    try {
-        const isConnected = await connectDb()
-        console.log(isConnected);
-    } catch (error) {
-        console.log(error);
-    }
 
-})
+await connectDb().then(() => {
+    console.log('connected to db!');
+    httpServer.listen(process.env.PORT, async (err) => {
+        if (err) return console.log("error spinning server");
+        console.log("Server running!");
+    })
+}).catch(err => console.log('error connecting db!'))
 const io = new Server(httpServer, {
     cors: {
         origin: ['http://localhost:3000', 'https://doxy-frontend.vercel.app'],
         methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT']
     }
 })
-
 
 //socket logic
 
