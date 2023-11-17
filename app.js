@@ -12,7 +12,7 @@ import credentials from './middlewares/credentials.js';
 import authRoutes from './routes/auth.routes.js'
 import indexRoutes from "./index.js"
 import tokenValidator from "./middlewares/verifyToken.js"
-import { handleError } from './controllers/documents/utils/errorHandler.js';
+import { handleError } from './utils/errorHandler.js';
 dotenv.config()
 
 

@@ -11,7 +11,7 @@ import { getViewersOptions } from "../controllers/documents/viewers/get.viewersO
 import { addViewers } from "../controllers/documents/viewers/add.viewers.js";
 import { getViewers } from "../controllers/documents/viewers/get.viewers.js";
 import { removeViewer } from "../controllers/documents/viewers/remove.viewer.js";
-import { handle } from "../controllers/documents/utils/errorHandler.js";
+import EnhancedRouter from "../utils/errorHandler.js";
 const router = Router()
 router.patch("/rename/:id", renameDocument)
 router.patch("/changeViewAccess/:id", makePublic)
@@ -23,9 +23,10 @@ router.get("/getCollaboratorsOptions/:id", getCollaboratorsOptions)
 router.patch("/addCollaborators/:id", addCollaborators)
 router.patch("/removeCollaborator/:id/:removeId", removeCollaborator)
 
-router.get("/getViewers/:id", handle(getViewers))
-router.get("/getViewersOptions/:id", handle(getViewersOptions))
-router.patch("/addViewers/:id", handle(addViewers))
-router.patch("/removeViewer/:id/:removeId", handle(removeViewer))
+// enhanced router
+EnhancedRouter.get("/getViewers/:id", getViewers)
+EnhancedRouter.get("/getViewersOptions/:id", getViewersOptions)
+EnhancedRouter.patch("/addViewers/:id", addViewers)
+EnhancedRouter.patch("/removeViewer/:id/:removeId", removeViewer)
 
 export default router
